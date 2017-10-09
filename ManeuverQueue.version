@@ -1,12 +1,12 @@
 {
   "NAME": "ManeuverQueue",
-  "URL": "http://ksp-avc.cybutek.net/version.php?id=372",
-  "DOWNLOAD": "http://spacedock.info/mod/xxxx",
+  "URL": "https://raw.githubusercontent.com/linuxgurugamer/ManeuverQueue/master/ManeuverQueue.version",
+  "DOWNLOAD": "http://spacedock.info/mod/1541",
   "VERSION": {
     "MAJOR": 0,
     "MINOR": 4,
     "PATCH": 3,
-    "BUILD": 0
+    "BUILD": 1
   },
   "KSP_VERSION": {
     "MAJOR": 1,
