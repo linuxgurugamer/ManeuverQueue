@@ -156,6 +156,11 @@ namespace FatHand
 		private static MapViewFiltering.VesselTypeFilter savedFilterState;
 
 
+		[System.Diagnostics.Conditional("DEBUG")]
+		private void log(string message)
+		{
+			Debug.Log("ManeuverQueue.Start()");
+		}
 
 		// Lifecycle
 		protected void Awake()
@@ -164,6 +169,7 @@ namespace FatHand
 
 		protected void Start()
 		{
+			log("ManeuverQueue.Start()");
 			const float WINDOW_VERTICAL_POSITION = 36;
 
 			this.pluginConfiguration.load();
@@ -319,28 +325,26 @@ namespace FatHand
 
 		private List<Vessel> VesselsSortedByName()
 		{
-
-			var originalVessels = new List<Vessel>(this.defaultVessels);
-			originalVessels.Sort((x, y) => x.vesselName.CompareTo(y.vesselName));
-
+			var originalVessels = SafeCloneList(this.defaultVessels);
+			originalVessels?.Sort((x, y) => x.vesselName.CompareTo(y.vesselName));
 			return originalVessels;
 
 		}
 
 		private List<Vessel> VesselsSortedByNextManeuverNode()
 		{
-			var originalVessels = new List<Vessel>(this.defaultVessels);
-
-			List<Vessel> filteredVessels = originalVessels.Where(vessel => (this.NextManeuverNodeForVessel(vessel) != null)).ToList();
-			filteredVessels.Sort((x, y) => this.NextManeuverNodeForVessel(x).UT.CompareTo(this.NextManeuverNodeForVessel(y).UT));
-
+			var originalVessels = SafeCloneList(this.defaultVessels);
+			List<Vessel> filteredVessels = originalVessels?.Where(vessel =>
+				(this.NextManeuverNodeForVessel(vessel) != null)).ToList();
+			filteredVessels?.Sort((x, y) => this.NextManeuverNodeForVessel(x)
+				.UT.CompareTo(this.NextManeuverNodeForVessel(y).UT));
 			return filteredVessels;
 
 		}
 
 		protected void SetVesselList(List<Vessel> vessels, MapViewFiltering.VesselTypeFilter filters)
 		{
-			if (this.spaceTrackingScene == null)
+			if (this.spaceTrackingScene == null || vessels == null)
 			{
 				return;
 			}
@@ -459,22 +463,19 @@ namespace FatHand
 
 		}
 
-		protected List<Vessel> GetTrackedVessels()
-		{
-			if (this.spaceTrackingScene == null)
-			{
-				return null;
-			}
+		protected List<Vessel> SafeCloneList(List<Vessel> list) =>
+			list == null ? null : new List<Vessel>(list);
 
-			List<Vessel> originalVessels = (List<Vessel>)this.spaceTrackingScene.GetType().GetField("trackedVessels", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(this.spaceTrackingScene);
+		protected List<Vessel> GetTrackedVessels() =>
+			spaceTrackingScene == null ? null :
+			SafeCloneList((List<Vessel>)spaceTrackingScene.GetType()
+				.GetField("trackedVessels", BindingFlags.NonPublic | BindingFlags.Instance)
+				.GetValue(spaceTrackingScene));
 
-			return new List<Vessel>(originalVessels);
-		}
-
-		protected List<TrackingStationWidget> GetTrackingStationWidgets()
-		{
-			return (List<TrackingStationWidget>)this.spaceTrackingScene.GetType().GetField("vesselWidgets", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(this.spaceTrackingScene);
-		}
+		protected List<TrackingStationWidget> GetTrackingStationWidgets() =>
+			(List<TrackingStationWidget>)spaceTrackingScene.GetType()
+			.GetField("vesselWidgets", BindingFlags.NonPublic | BindingFlags.Instance)
+			.GetValue(this.spaceTrackingScene);
 
 		protected TrackingStationWidget GetWidgetForVessel(Vessel vessel)
 		{
