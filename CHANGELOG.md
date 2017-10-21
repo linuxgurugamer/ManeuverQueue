@@ -1,3 +1,10 @@
+## 0.4.4
+Bugfixes:
+  - Fix for NullReference (in Start and Update), thanks @firda-cze
+
+## 0.4.3
+  - Adoption by LGG
+
 ## 0.4.2
    
 Bugfixes:
