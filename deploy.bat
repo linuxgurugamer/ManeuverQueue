@@ -1,13 +1,13 @@
+@cd /D %~dp0
+@call vars.bat
 
-rem @echo off
+if not exist "GameData" mkdir GameData
+if not exist "GameData\%GAMEDIR%" mkdir "GameData\%GAMEDIR%"
+if not exist "GameData\%GAMEDIR%\Plugins" mkdir "GameData\%GAMEDIR%\Plugins"
 
-set H=R:\KSP_1.3.1_dev
-set GAMEDIR=ManeuverQueue
+if "%1" NEQ "" copy /Y "%1%2" "GameData\%GAMEDIR%\Plugins"
+if "%1" EQU "" copy /Y "%GAMEDIR%\bin\Release\%GAMEDIR%.dll" "GameData\%GAMEDIR%\Plugins"
+if not exist "%KerbalHive%\GameData\%GAMEDIR%" mkdir "%KerbalHive%\GameData\%GAMEDIR%"
+robocopy /E GameData\%GAMEDIR% "%KerbalHive%\GameData\%GAMEDIR%"
 
-echo %H%
-
-copy /Y "%1%2" "GameData\%GAMEDIR%\Plugins"
-
-
-rem mkdir "%H%\GameData\%GAMEDIR%"
-xcopy  /E /y /i GameData\%GAMEDIR% "%H%\GameData\%GAMEDIR%"
+exit /b 0

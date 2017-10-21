@@ -1,8 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.8
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManeuverQueue_Project", "ManeuverQueue_KSP1.2\ManeuverQueue_Project.csproj", "{DE91AC52-37ED-45AB-98BF-4C5C3534025D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManeuverQueue", "ManeuverQueue\ManeuverQueue.csproj", "{DE91AC52-37ED-45AB-98BF-4C5C3534025D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{0AE203D1-2B38-4F17-8FE8-C796E4EFA577}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,9 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		ManeuverQueue\ManeuverQueue.projitems*{de91ac52-37ed-45ab-98bf-4c5c3534025d}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

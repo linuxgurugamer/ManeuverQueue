@@ -8,8 +8,8 @@
     <RootNamespace>ManeuverQueue</RootNamespace>
     <AssemblyName>ManeuverQueue</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ReleaseVersion>0.4.2</ReleaseVersion>
     <UseMSBuildEngine>false</UseMSBuildEngine>
+    <KerbalHive Condition=" '$(KerbalHive)' == '' ">$(KerbalHive)</KerbalHive>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,17 +29,20 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>$(KerbalHive)\KSP_x64_Data\Managed\System.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>R:\KSP_1.3.1_dev\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(KerbalHive)\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>R:\KSP_1.3.1_dev\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>$(KerbalHive)\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>R:\KSP_1.3.1_dev\KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(KerbalHive)\KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -49,7 +52,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyVersion.tt</DependentUpon>
     </Compile>
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ManeuverQueue.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,18 +66,11 @@
   <Import Project="..\ManeuverQueue\ManeuverQueue.projitems" Label="Shared" Condition="Exists('..\ManeuverQueue\ManeuverQueue.projitems')" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>
-set textTemplatingPath="%25ProgramFiles(x86)%25\Microsoft Visual Studio\2017\Community\Common7\IDE \texttransform.exe"
-
+	<PreBuildEvent>set textTemplatingPath="%25ProgramFiles(x86)%25\Microsoft Visual Studio\2017\Community\Common7\IDE\texttransform.exe"
 %25textTemplatingPath%25 "$(ProjectDir)AssemblyVersion.tt"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-start /D D:\Users\jbb\github\ManeuverQueue /WAIT deploy.bat  $(TargetDir) $(TargetFileName)
-
-if $(ConfigurationName) == Release (
-start /D D:\Users\jbb\github\ManeuverQueue /WAIT buildRelease.bat $(TargetDir) $(TargetFileName)
-)
-</PostBuildEvent>
+    <PostBuildEvent>if not "$(ConfigurationName)" == "Release" "$(SolutionDir)/deploy.bat" "$(TargetDir)" "$(TargetFileName)"
+if "$(ConfigurationName)" == "Release" "$(SolutionDir)/buildRelease.bat" "$(TargetDir)" "$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
