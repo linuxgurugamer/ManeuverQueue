@@ -1,3 +1,10 @@
+0.0.4.x
+- Replaced reflection code with hard-coded offsets.  These will need to be checked for each KSP version, 
+	see the comments at the beginning of the file in ManeuverQueue
+- Added ReflectionDump.cs to dump the values to the log file, needed to get new values of the constants
+- Added Reflection class 
+
+Following thanks to @firda-cze:
 - removed this-prefixes, used shortcuts like get => value, properties start with big letter (PascalCasing)
 - main logic/change in Start() - will try 64bit first, then current 32bit with type check, full search with printout as last option
 - fix for NullReference reworked: DefaultVessels can return null, Start will set delaySetMode = true for next Update()

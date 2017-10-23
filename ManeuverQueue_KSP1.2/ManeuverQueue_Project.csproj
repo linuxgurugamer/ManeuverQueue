@@ -51,6 +51,8 @@
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ManeuverQueue.cs" />
+    <Compile Include="ReflectionDump.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AssemblyVersion.tt">
