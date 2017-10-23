@@ -294,9 +294,8 @@ namespace FatHand
 
 			if (DefaultVessels != null)
 			{
-				delaySetMode = false;
-				CurrentMode = (FilterMode)pluginConfiguration.GetValue(configurationModeKey, (int)FilterMode.Default);
-			}
+                GetCurrentMode();
+            }
 			else
 			{
 				delaySetMode = true;
@@ -308,6 +307,12 @@ namespace FatHand
 			Log("Start Finished");
 		}
 
+        void GetCurrentMode()
+        {
+            delaySetMode = false;
+            CurrentMode = (FilterMode)pluginConfiguration.GetValue(configurationModeKey, (int)FilterMode.Default);
+        }
+
 		protected void Update()
 		{
 			if (trackedVesselsField == null)
@@ -316,9 +321,8 @@ namespace FatHand
 			if(delaySetMode)
 			{
 				Log("Delayed set mode");
-				delaySetMode = false;
-				CurrentMode = (FilterMode)pluginConfiguration.GetValue(configurationModeKey, (int)FilterMode.Default);
-			}
+                GetCurrentMode();
+            }
 			if (GuardedVessels?.Count > 0 &&
 				NextManeuverNodeForVessel(GuardedVessels[0]).UT
 				- Planetarium.GetUniversalTime()
@@ -597,6 +601,7 @@ namespace FatHand
 		[System.Diagnostics.Conditional("DEBUG")]
 		private void Log(string message) =>
 			Debug.Log("ManeuverQueue: " + message);
+
 		[System.Diagnostics.Conditional("DEBUG")]
 		private void Log(string message, params object[] args) =>
 			Log(args == null ? message : string.Format(message, args));

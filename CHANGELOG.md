@@ -1,3 +1,9 @@
+- removed this-prefixes, used shortcuts like get => value, properties start with big letter (PascalCasing)
+- main logic/change in Start() - will try 64bit first, then current 32bit with type check, full search with printout as last option
+- fix for NullReference reworked: DefaultVessels can return null, Start will set delaySetMode = true for next Update()
+- debug build includes more logs (see Log() with Conditional("DEBUG") at the end)
+
+
 ## 0.4.4
 Bugfixes:
   - Fix for NullReference (in Start and Update), thanks @firda-cze
