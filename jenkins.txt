@@ -1,0 +1,30 @@
+#
+# This file contains several types of information:
+#
+# 1     Mod install directory
+# 2     Project definitions
+# 3     Files to copy, source, dest
+# 4     Directory to copy, sourcedir, destdir
+# 5     Add ModuleManager to GameData
+# 6     Spacedock.info mod id
+
+# 1:GAMEDIR, VERSIONFILE
+1:ManeuverQueue, ManeuverQueue.version
+
+# 2:PROJNAME, PROJ, VERSIONFILE, PLUGINSFOLDER
+2:ManeuverQueue,Source/ManeuverQueue.csproj,ManeuverQueue.                                          version,GameData/ManeuverQueue/Plugins
+
+# 3:SOURCEFILE, DESTDIR
+3:ManeuverQueue.version,GameData/ManeuverQueue
+3:LICENSE.txt,GameData/ManeuverQueue
+3:README.md,GameData/ManeuverQueue
+
+# 4:SOURCDIR, DESTDIR
+#4:Textures,GameData/ManeuverQueue/Textures
+
+# 5:ModuleManager
+# 5:ModuleManager
+
+# 6:mod_id
+6:1541
+
