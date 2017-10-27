@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManeuverQueue_Project", "ManeuverQueue_KSP1.2\ManeuverQueue_Project.csproj", "{DE91AC52-37ED-45AB-98BF-4C5C3534025D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManeuverQueue_Project", "ManeuverQueue\ManeuverQueue_Project.csproj", "{DE91AC52-37ED-45AB-98BF-4C5C3534025D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{0AE203D1-2B38-4F17-8FE8-C796E4EFA577}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,6 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		LICENSE.txt = LICENSE.txt
 		ManeuverQueue.version = ManeuverQueue.version
 		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A96E712F-E985-49B3-8BD5-3EC9D5C772CC}"
+	ProjectSection(SolutionItems) = preProject
+		jenkins.txt = jenkins.txt
 	EndProjectSection
 EndProject
 Global
