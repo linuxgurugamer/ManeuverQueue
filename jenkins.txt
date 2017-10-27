@@ -12,7 +12,7 @@
 1:ManeuverQueue, ManeuverQueue.version
 
 # 2:PROJNAME, PROJ, VERSIONFILE, PLUGINSFOLDER
-2:ManeuverQueue,ManeuverQueue/ManeuverQueue.csproj,ManeuverQueue.version,GameData/ManeuverQueue/Plugins
+2:ManeuverQueue,ManeuverQueue/ManeuverQueue_Project.csproj,ManeuverQueue.version,GameData/ManeuverQueue/Plugins
 
 # 3:SOURCEFILE, DESTDIR
 3:ManeuverQueue.version,GameData/ManeuverQueue
