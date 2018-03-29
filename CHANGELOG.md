@@ -1,4 +1,9 @@
-0.0.4.5
+0.4.6
+	updated to 1.4.1
+	updated verison file
+	Added code to dynamically get the offsets from reflection when loading into Tracking Station, no need to hardcode anymore
+
+0.4.5
 - Replaced reflection code with hard-coded offsets.  These will need to be checked for each KSP version, 
 	see the comments at the beginning of the file in ManeuverQueue
 - Added ReflectionDump.cs to dump the values to the log file, needed to get new values of the constants

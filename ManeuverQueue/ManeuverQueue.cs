@@ -75,6 +75,7 @@ Compile and test.
 
         public bool InitOffsets()
         {
+#if false
             if (Versioning.version_major == 1 && Versioning.version_minor == 3 && Versioning.Revision == 1)
             {
                 TRACKEDVESSELS = 2;
@@ -82,6 +83,35 @@ Compile and test.
                 IMAGE = 0;
                 return true;
             }
+#endif
+            TRACKEDVESSELS = -1;
+            VESSELWIDGETS = -1;
+            IMAGE = -1;
+
+            int c = 0;
+            foreach (var f in typeof(SpaceTracking).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+            {
+                switch (f.Name)
+                {
+                    case "trackedVessels":
+                        TRACKEDVESSELS = c; break;
+                    case "vesselWidgets":
+                        VESSELWIDGETS = c; break;
+                }
+                c++;
+            }
+            c = 0;
+            foreach (var f in typeof(VesselIconSprite).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+            {
+                switch (f.Name)
+                {
+                    case "image":
+                        IMAGE = c; break;
+                }
+                c++;
+            }
+            if (TRACKEDVESSELS >= 0 && VESSELWIDGETS >= 0 && IMAGE >= 0)
+                return true;
             return false;
         }
 

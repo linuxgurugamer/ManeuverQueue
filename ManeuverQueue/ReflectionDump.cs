@@ -9,7 +9,7 @@ using KSP.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-#if DEBUG
+#if false
 namespace ManeuverQueue
 {
     [KSPAddon(KSPAddon.Startup.TrackingStation, false)]
