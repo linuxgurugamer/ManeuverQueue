@@ -1,3 +1,6 @@
+0.4.6.1
+	Version bump for 1.5 rebuild
+
 0.4.6
 	updated to 1.4.1
 	updated verison file
