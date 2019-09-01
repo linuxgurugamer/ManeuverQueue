@@ -20,8 +20,11 @@ namespace FatHand
         protected const double minimumManeuverDeltaT = 15.0 * 60.0;
         const float WINDOW_VERTICAL_POSITION = 36;
 
-        public static string[] FilterModeLabels = new string[] {
-            "MET", "MNV", "A-Z" };
+        public static GUIContent[] FilterModeLabels = new GUIContent[] {
+            new GUIContent("MET", "Shows the default Tracking Station list"),
+             new GUIContent("MNV", "Shows only those ships with maneuvers nodes, order by next maneuver node time (earliest first)"),
+             new GUIContent("A-Z", "Shows the default list, sorted alphabetically")
+        };
         public enum FilterMode
         {
             Undefined = -1,
@@ -44,50 +47,13 @@ namespace FatHand
 
         private FilterMode _currentMode = FilterMode.Undefined;
 
-    /*
-     * Note that the following is unnecessary, it's been replaced with code which identifies the necessary offsets
-     * at runtime
-     * 
-     * 
-    If you REALLY want to, here is what you will need to do to fix the Reflection issues, and I suggest you do this BEFORE any more debugging:
 
-    Compile in debug mode
-
-    1. Install and start the game, go into the Tracking Station
-    2. Exit, and open up the output_log.txt file
-    3. Look in the file ManeuverQueue.cs, near the top, in the Init function, you will see where a number of constants have their values set depending on the version.
-    4. Create a new section for the version of KSP you are running, copy them in from one of the other sections.
-    5. Look in the log file, for lines beginning with:
-
-        SpaceTracking - Field name
-        VesselIconSprite - Field name
-
-    6. Look in the log for the corresponding value for each line in the Init function, you should find the corresponding number.  
-    7. Update the Init section
-
-    Compile and test.
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     */
         public static int TRACKEDVESSELS = -1;
         public static int VESSELWIDGETS = -1;
         public static int IMAGE = -1;
 
         public bool InitOffsets()
         {
-#if false
-            if (Versioning.version_major == 1 && Versioning.version_minor == 3 && Versioning.Revision == 1)
-            {
-                TRACKEDVESSELS = 2;
-                VESSELWIDGETS = 0;
-                IMAGE = 0;
-                return true;
-            }
-#endif
             TRACKEDVESSELS = -1;
             VESSELWIDGETS = -1;
             IMAGE = -1;
@@ -254,12 +220,9 @@ namespace FatHand
             vesselIconSprite = FindObjectOfType <VesselIconSprite > ();
             if (vesselIconSprite == null)
                 vesselIconSprite = new VesselIconSprite();
-#if true
-            Debug.Log("ManeuverQueue.Start 1");
+
             trackedVesselsField = Refl.GetField(spaceTrackingScene, TRACKEDVESSELS);
-            Debug.Log("ManeuverQueue.Start 2");
             vesselWidgetsField = Refl.GetField(spaceTrackingScene, VESSELWIDGETS);
-            Debug.Log("ManeuverQueue.Start 3");
             vesselImageField = Refl.GetField(vesselIconSprite, IMAGE);
             if (trackedVesselsField == null || vesselWidgetsField == null)
             {
@@ -268,111 +231,7 @@ namespace FatHand
                 ScreenMessages.PostScreenMessage(s, 5, ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
-#else
-            //works for KSP_64.exe using KSP_x64_Data\Managed\Assembly-CSharp.dll
-            trackedVesselsField = GetSpaceTrackingField("trackedVessels");
-            vesselWidgetsField = GetSpaceTrackingField("vesselWidgets");
-            vesselImageField = GetVesselIconSpriteField("image")
 
-
-            if (trackedVesselsField == null || vesselWidgetsField == null)
-            {
-                //works for KSP.exe using obfuscated KSP_Data\Managed\Assembly-CSharp.dll
-                trackedVesselsField = GetSpaceTrackingField("\x3");
-                vesselWidgetsField = GetSpaceTrackingField("\x1");
-                vesselImageField = GetVesselIconSpriteField("\x1");
-                if (trackedVesselsField != null
-                    && vesselWidgetsField != null
-                    && vesselImageField != null
-                    && trackedVesselsField.FieldType == typeof(List<Vessel>)
-                    && vesselWidgetsField.FieldType == typeof(List<TrackingStationWidget>)
-                    && vesselImageField.FieldType == typeof(Image))
-                {
-                    Debug.Log("ManeuverQueue: obfuscated Assembly-CSharp.dll detected");
-                }
-                else
-                {//	should work in any version (unless there are more fields with same type as those two we need)
-                    trackedVesselsField = null;
-                    vesselWidgetsField = null;
-                    vesselImageField = null;
-                    System.Text.StringBuilder sb = null;
-                    foreach (var f in typeof(SpaceTracking).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
-                    {
-                        bool valid = true;
-                        foreach (char c in f.Name)
-                        {
-                            if (c != '_' && !char.IsLetterOrDigit(c))
-                            {
-                                valid = false;
-                                break;
-                            }
-                        }
-                        if (valid) Debug.Log(string.Format(
-                            "ManeuverQueue: SpaceTracking.{0}: {1}",
-                            f.Name, f.FieldType.FullName));
-                        else
-                        {
-                            if (sb == null) sb = new System.Text.StringBuilder();
-                            sb.Length = 0;
-                            sb.Append("ManeuverQueue: SpaceTracking.");
-                            foreach (char c in f.Name)
-                            {
-                                if (c != '_' && !char.IsLetterOrDigit(c))
-                                    sb.AppendFormat("\\x{0:X}", (uint)c);
-                                else sb.Append(c);
-                            }
-                            sb.AppendFormat("({0}): {1}", f.Name.Length, f.FieldType.FullName);
-                            Debug.Log(sb.ToString());
-                            if ((trackedVesselsField == null || f.Name == "\x3")
-                                && f.FieldType == typeof(List<Vessel>))
-                                trackedVesselsField = f;
-                            if ((vesselWidgetsField == null || f.Name == "\x1")
-                                && f.FieldType == typeof(List<TrackingStationWidget>))
-                                vesselWidgetsField = f;
-                        }
-                    }
-                    if (trackedVesselsField == null || vesselWidgetsField == null)
-                    {
-                        Debug.Log("ManeuverQueue: Could not get trackedVessels/vesselWidgets FieldInfo, plugin will be disabled");
-                        return;
-                    }
-                    //note: it is not critical if we cannot change the color
-                    //  =>  no check for vesselImageField above, but we will try here
-                    foreach (var f in typeof(VesselIconSprite).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
-                    {
-                        bool valid = true;
-                        foreach (char c in f.Name)
-                        {
-                            if (c != '_' && !char.IsLetterOrDigit(c))
-                            {
-                                valid = false;
-                                break;
-                            }
-                        }
-                        if (valid) Debug.Log(string.Format(
-                            "ManeuverQueue: VesselIconSprite.{0}: {1}",
-                            f.Name, f.FieldType.FullName));
-                        else
-                        {
-                            if (sb == null) sb = new System.Text.StringBuilder();
-                            sb.Length = 0;
-                            sb.Append("ManeuverQueue: VesselIconSprite.");
-                            foreach (char c in f.Name)
-                            {
-                                if (c != '_' && !char.IsLetterOrDigit(c))
-                                    sb.AppendFormat("\\x{0:X}", (uint)c);
-                                else sb.Append(c);
-                            }
-                            sb.AppendFormat("({0}): {1}", f.Name.Length, f.FieldType.FullName);
-                            Debug.Log(sb.ToString());
-                            if ((vesselImageField == null || f.Name == "\x1")
-                                && f.FieldType == typeof(Image))
-                                vesselImageField = f;
-                        }
-                    }
-                }
-            }
-#endif
 
             pluginConfiguration.load();
 
@@ -489,12 +348,47 @@ namespace FatHand
             pluginConfiguration.save();
 
         }
+        /// <summary>
+        /// 
+        /// 
 
+        string tooltip = "";
+        bool drawTooltip = true;
+        // Vector2 mousePosition;
+        Vector2 tooltipSize;
+        float tooltipX, tooltipY;
+        Rect tooltipRect;
+        void SetupTooltip()
+        {
+            Vector2 mousePosition;
+            mousePosition.x = Input.mousePosition.x;
+            mousePosition.y = Screen.height - Input.mousePosition.y;
+            //  Log.Info("SetupTooltip, tooltip: " + tooltip);
+            if (tooltip != null && tooltip.Trim().Length > 0)
+            {
+                tooltipSize = HighLogic.Skin.label.CalcSize(new GUIContent(tooltip));
+                tooltipX = (mousePosition.x + tooltipSize.x > Screen.width) ? (Screen.width - tooltipSize.x) : mousePosition.x;
+                tooltipY = mousePosition.y;
+                if (tooltipX < 0) tooltipX = 0;
+                if (tooltipY < 0) tooltipY = 0;
+                tooltipRect = new Rect(tooltipX - 1, tooltipY - tooltipSize.y, tooltipSize.x + 4, tooltipSize.y);
+            }
+        }
+
+        void TooltipWindow(int id)
+        {
+            //if (HighLogic.CurrentGame.Parameters.CustomParams<CCOLParams>().tooltips)
+                GUI.Label(new Rect(2, 0, tooltipRect.width - 2, tooltipRect.height), tooltip, HighLogic.Skin.label);
+        }
+
+
+        /// 
+        /// </summary>
         protected void OnGUI()
         {
             if (render)
             {
-                windowPos =ClickThruBlocker.GUILayoutWindow(1, windowPos, ToolbarWindow, "", windowStyle, new GUILayoutOption[0]);
+                windowPos = ClickThruBlocker.GUILayoutWindow(1, windowPos, ToolbarWindow, "", windowStyle, new GUILayoutOption[0]);
 
                 if (needsRerender)
                 {
@@ -513,6 +407,15 @@ namespace FatHand
                     if (needsWidgetColorRender)
                         RenderWidgetColors();
                 }
+
+
+                
+                if (HighLogic.CurrentGame.Parameters.CustomParams<MQ>().tooltips && tooltip != null && tooltip != "")
+                {
+                    SetupTooltip();
+                    ClickThruBlocker.GUIWindow(1234, tooltipRect, TooltipWindow, "");
+                }
+
             }
         }
 
@@ -663,6 +566,11 @@ namespace FatHand
             CurrentMode = (FilterMode)GUILayout.Toolbar((int)CurrentMode,
                 FilterModeLabels, HighLogic.Skin.button,
                 new GUILayoutOption[] { GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false) });
+
+            if (Event.current.type == EventType.Repaint && GUI.tooltip != tooltip)
+            {
+                tooltip = GUI.tooltip;
+            }
         }
 
         private void onVesselDestroy(Vessel vessel)

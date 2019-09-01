@@ -37,7 +37,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="InstallChecker.cs" />
     <Compile Include="ManeuverQueue.cs" />
-    <Compile Include="ReflectionDump.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>

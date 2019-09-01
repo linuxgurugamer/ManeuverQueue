@@ -2,6 +2,9 @@
 	Fixed nullref going into tracking station
 	Added support for the ClickThroughBlocker
 	Added InstallChecker
+	Added tooltips for toolbar
+	Added settings page for tooltip option
+	Deleted old code
 
 0.4.6.1
 	Version bump for 1.5 rebuild
