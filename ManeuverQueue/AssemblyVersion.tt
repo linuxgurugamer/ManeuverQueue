@@ -2,7 +2,7 @@
 <#@ import namespace="System.IO" #>
 <#@ output extension=".cs" #>
 
-<#@ assembly name="EnvDTE" #><# /* This assembly provides access to Visual Studio project properties. */ #>
+/* < # @ assembly name="EnvDTE" # > < # / * This assembly provides access to Visual Studio project properties. * / # > */
 <#
 
 	// Instructions
@@ -28,7 +28,15 @@
 	int i2 = 0;
 	string s;
 
-	string versionfile =  @"D:\Users\jbb\github\ManeuverQueue\ManeuverQueue.version";
+	// For Visual Studio / MSBuild Build-Time Template Resolution
+	string RootDirectory = System.IO.Path.GetDirectoryName(Host.TemplateFile) + @"\..\";
+	
+
+	//
+	// Update the following with the name of the .version file which is in the root directory
+	//
+	string versionfile = RootDirectory + "ManeuverQueue.version";
+
 	if (!File.Exists(versionfile))
 	{
 		Write("File: " + versionfile + " missing\n");		

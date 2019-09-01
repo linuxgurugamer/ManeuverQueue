@@ -1,3 +1,8 @@
+0.4.7
+	Fixed nullref going into tracking station
+	Added support for the ClickThroughBlocker
+	Added InstallChecker
+
 0.4.6.1
 	Version bump for 1.5 rebuild
 

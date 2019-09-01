@@ -9,6 +9,8 @@ using KSP.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
+using ClickThroughFix;
+
 namespace FatHand
 {
     [KSPAddon(KSPAddon.Startup.TrackingStation, false)]
@@ -42,36 +44,38 @@ namespace FatHand
 
         private FilterMode _currentMode = FilterMode.Undefined;
 
-        /*
- * 
- * 
-If you REALLY want to, here is what you will need to do to fix the Reflection issues, and I suggest you do this BEFORE any more debugging:
+    /*
+     * Note that the following is unnecessary, it's been replaced with code which identifies the necessary offsets
+     * at runtime
+     * 
+     * 
+    If you REALLY want to, here is what you will need to do to fix the Reflection issues, and I suggest you do this BEFORE any more debugging:
 
-Compile in debug mode
+    Compile in debug mode
 
-1. Install and start the game, go into the Tracking Station
-2. Exit, and open up the output_log.txt file
-3. Look in the file ManeuverQueue.cs, near the top, in the Init function, you will see where a number of constants have their values set depending on the version.
-4. Create a new section for the version of KSP you are running, copy them in from one of the other sections.
-5. Look in the log file, for lines beginning with:
+    1. Install and start the game, go into the Tracking Station
+    2. Exit, and open up the output_log.txt file
+    3. Look in the file ManeuverQueue.cs, near the top, in the Init function, you will see where a number of constants have their values set depending on the version.
+    4. Create a new section for the version of KSP you are running, copy them in from one of the other sections.
+    5. Look in the log file, for lines beginning with:
 
-    SpaceTracking - Field name
-    VesselIconSprite - Field name
+        SpaceTracking - Field name
+        VesselIconSprite - Field name
 
-6. Look in the log for the corresponding value for each line in the Init function, you should find the corresponding number.  
-7. Update the Init section
+    6. Look in the log for the corresponding value for each line in the Init function, you should find the corresponding number.  
+    7. Update the Init section
 
-Compile and test.
- * 
- * 
- * 
- * 
- * 
- * 
- */
-        public static int TRACKEDVESSELS = 0;
-        public static int VESSELWIDGETS = 0;
-        public static int IMAGE = 0;
+    Compile and test.
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     */
+        public static int TRACKEDVESSELS = -1;
+        public static int VESSELWIDGETS = -1;
+        public static int IMAGE = -1;
 
         public bool InitOffsets()
         {
@@ -240,16 +244,22 @@ Compile and test.
 
             if (!InitOffsets())
             {
-                ScreenMessages.PostScreenMessage("ManeuverQueue not compatible with this KSP version", 5, ScreenMessageStyle.UPPER_CENTER);
+                var s ="ManeuverQueue not compatible with this KSP version";
+                Debug.Log("[ManeuverQueue]: " + s);
+                ScreenMessages.PostScreenMessage(s, 5, ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
 
             spaceTrackingScene = FindObjectOfType<SpaceTracking>();
             vesselIconSprite = FindObjectOfType <VesselIconSprite > ();
-
+            if (vesselIconSprite == null)
+                vesselIconSprite = new VesselIconSprite();
 #if true
+            Debug.Log("ManeuverQueue.Start 1");
             trackedVesselsField = Refl.GetField(spaceTrackingScene, TRACKEDVESSELS);
+            Debug.Log("ManeuverQueue.Start 2");
             vesselWidgetsField = Refl.GetField(spaceTrackingScene, VESSELWIDGETS);
+            Debug.Log("ManeuverQueue.Start 3");
             vesselImageField = Refl.GetField(vesselIconSprite, IMAGE);
             if (trackedVesselsField == null || vesselWidgetsField == null)
             {
@@ -484,7 +494,7 @@ Compile and test.
         {
             if (render)
             {
-                windowPos = GUILayout.Window(1, windowPos, ToolbarWindow, "", windowStyle, new GUILayoutOption[0]);
+                windowPos =ClickThruBlocker.GUILayoutWindow(1, windowPos, ToolbarWindow, "", windowStyle, new GUILayoutOption[0]);
 
                 if (needsRerender)
                 {

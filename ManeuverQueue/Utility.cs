@@ -10,6 +10,8 @@ namespace FatHand
         public static FieldInfo GetField(object obj, int fieldNum)
         {
             int c = 0;
+            Debug.Log("GetField 1, fieldNum: " + fieldNum + ", obj.GetType(): " + obj.GetType().ToString());
+            Debug.Log("Proceeding");
             foreach (FieldInfo FI in obj.GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 if (c == fieldNum)
@@ -32,6 +34,8 @@ namespace FatHand
 #if true
         public static FieldInfo GetField(object obj, string name)
         {
+            Debug.Log("GetField 2, name: " + name);
+
             var f = obj.GetType().GetField(name, BindingFlags.DeclaredOnly | BindingFlags.NonPublic | BindingFlags.Instance);
             if (f == null) throw new Exception("No such field: " + obj.GetType() + "#" + name);
             return f;
