@@ -1,3 +1,8 @@
+ChangeLog
+
+0.5.0
+	Updated for KSP 1.8
+
 0.4.7
 	Fixed nullref going into tracking station
 	Added support for the ClickThroughBlocker
